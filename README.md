@@ -2,6 +2,8 @@
 
 Spec-driven development with context engineering, built as a pi-agent extension.
 
+**Based on:** [get-shit-done](https://github.com/gsd-build/get-shit-done) by TÂCHES
+
 ## What is GSD?
 
 **Get-Shit-Done (GSD)** is a meta-prompting, context engineering, and spec-driven development system that solves "context rot" — the quality degradation that happens as AI fills its context window.
@@ -15,26 +17,88 @@ GSD provides:
 ## Installation
 
 ```bash
-# From npm (when published)
-pi install npm:@embeddediron/pi-gsd
+# From npm
+pi install npm:@eirondev/pi-gsd
 
-# From local directory
+# From GitHub
+pi install https://github.com/eirondev/pi-gsd
+
+# Local development
+git clone https://github.com/eirondev/pi-gsd.git
+cd pi-gsd
+npm install && npm run build
 pi install ./path/to/pi-gsd
 ```
 
-Or copy to `~/.pi/agent/extensions/pi-gsd/` for global access.
-
 ## Commands
+
+### Core Workflow
 
 | Command | Description |
 |---------|-------------|
-| `/gsd:new-project` | Initialize a new GSD project in current directory |
-| `/gsd:status` | Show current project status and blockers |
-| `/gsd:progress` | Show workflow position and next steps |
-| `/gsd:discuss-phase <N>` | Capture implementation decisions for phase N |
-| `/gsd:plan-phase <N>` | Research and create plans for phase N |
-| `/gsd:execute-phase <N>` | Execute phase N plans (sequential or parallel) |
-| `/gsd:verify-work <N>` | Manual verification checklist for phase N |
+| `/gsd:new-project` | Initialize: questions → research → requirements → roadmap |
+| `/gsd:discuss-phase <N>` | Capture implementation decisions |
+| `/gsd:plan-phase <N>` | Research + create task plans |
+| `/gsd:execute-phase <N>` | Execute plans in parallel waves |
+| `/gsd:verify-work <N>` | Manual verification checklist |
+
+### Milestone Management
+
+| Command | Description |
+|---------|-------------|
+| `/gsd:complete-milestone` | Archive milestone, tag release |
+| `/gsd:new-milestone [name]` | Start next version |
+| `/gsd:audit-milestone` | Verify milestone achieved DoD |
+| `/gsd:plan-milestone-gaps` | Create phases to close audit gaps |
+
+### Phase Management
+
+| Command | Description |
+|---------|-------------|
+| `/gsd:add-phase` | Append phase to roadmap |
+| `/gsd:insert-phase <N>` | Insert urgent work between phases |
+| `/gsd:remove-phase <N>` | Remove phase, renumber |
+| `/gsd:list-phase-assumptions [N]` | Show planned approach |
+
+### Session Management
+
+| Command | Description |
+|---------|-------------|
+| `/gsd:pause-work` | Create handoff for next session |
+| `/gsd:resume-work` | Restore from handoff |
+
+### Navigation
+
+| Command | Description |
+|---------|-------------|
+| `/gsd:status` | Show project status |
+| `/gsd:progress` | Show workflow position |
+
+### Brownfield Support
+
+| Command | Description |
+|---------|-------------|
+| `/gsd:map-codebase` | Analyze existing codebase |
+
+### Utilities
+
+| Command | Description |
+|---------|-------------|
+| `/gsd:quick [--full] [--discuss]` | Ad-hoc task with GSD guarantees |
+| `/gsd:debug [desc]` | Systematic debugging with state |
+| `/gsd:add-todo [desc]` | Capture idea for later |
+| `/gsd:check-todos` | List pending todos |
+| `/gsd:health [--repair]` | Validate .planning/ integrity |
+| `/gsd:settings` | Configure model profile & workflow |
+| `/gsd:set-profile <profile>` | Switch: quality/balanced/budget |
+
+### Help
+
+| Command | Description |
+|---------|-------------|
+| `/gsd:help` | Show all commands |
+| `/gsd:update` | Update pi-gsd |
+| `/gsd:join-discord` | Join community |
 
 ## Workflow
 
@@ -43,13 +107,29 @@ Or copy to `~/.pi/agent/extensions/pi-gsd/` for global access.
     ↓
 /gsd:discuss-phase 1    ← Capture decisions (CONTEXT.md)
     ↓
-/gsd:plan-phase 1       ← Research + create plans (PLAN.md files)
+/gsd:plan-phase 1       ← Research + create plans
     ↓
-/gsd:execute-phase 1    ← Execute plans with sub-agents
+/gsd:execute-phase 1    ← Execute with sub-agents
     ↓
-/gsd:verify-work 1      ← Manual verification checklist
+/gsd:verify-work 1      ← Manual verification
     ↓
-(goto next phase)
+/gsd:complete-milestone ← Archive, tag, next
+    ↓
+/gsd:new-milestone      ← Start next version
+```
+
+## Quick Mode
+
+For ad-hoc tasks:
+
+```
+/gsd:quick "Add dark mode toggle"
+
+# With full verification:
+/gsd:quick --full "Fix login bug"
+
+# With context gathering:
+/gsd:quick --discuss "Add export feature"
 ```
 
 ## Project Structure
@@ -61,85 +141,54 @@ your-project/
 │   ├── PROJECT.md         # Vision and key decisions
 │   ├── REQUIREMENTS.md    # V1/V2 requirements
 │   ├── ROADMAP.md         # Phases and milestones
-│   └── phases/
-│       ├── 01-setup/
-│       │   ├── CONTEXT.md    # Implementation decisions
-│       │   ├── RESEARCH.md   # Research findings
-│       │   ├── 01-task.md    # Plan files
-│       │   ├── 02-task.md
-│       │   ├── SUMMARY.md    # What was done
-│       │   └── VERIFICATION.md
-│       └── 02-features/
+│   ├── config.json        # Model profile, workflow settings
+│   ├── HANDOFF.md         # Pause/resume handoff
+│   ├── MILESTONE-AUDIT.md # Audit results
+│   ├── phases/
+│   │   ├── 01-setup/
+│   │   │   ├── CONTEXT.md
+│   │   │   ├── RESEARCH.md
+│   │   │   ├── 01-task.md
+│   │   │   ├── SUMMARY.md
+│   │   │   └── VERIFICATION.md
+│   │   └── 02-features/
+│   ├── quick/             # Ad-hoc tasks
+│   ├── debug/             # Debug sessions
+│   └── archive/           # Completed milestones
 └── src/
     └── ...
 ```
 
-## Key Files
+## Configuration
 
-### STATE.md
-Tracks current state:
-```yaml
-project: MyProject
-current_phase: 2
-phase_status: planning
-phases:
-  - number: 1
-    name: Setup
-    status: completed
-  - number: 2
-    name: Features
-    status: planning
-blockers: []
-next_actions:
-  - Run /gsd:plan-phase 2
+### Model Profiles
+
+| Profile | Planning | Execution | Verification | Use Case |
+|---------|----------|-----------|--------------|----------|
+| quality | Opus | Opus | Sonnet | Critical features |
+| balanced | Opus | Sonnet | Sonnet | Default |
+| budget | Sonnet | Sonnet | Haiku | Quick iterations |
+
+### Workflow Settings
+
+```json
+{
+  "modelProfile": "balanced",
+  "workflow": {
+    "research": true,
+    "planCheck": true,
+    "verifier": true,
+    "autoAdvance": false
+  },
+  "parallelization": {
+    "enabled": true,
+    "maxConcurrent": 4
+  },
+  "git": {
+    "branchingStrategy": "none"
+  }
+}
 ```
-
-### CONTEXT.md (per phase)
-Implementation decisions, preferences, trade-offs.
-
-### PLAN.md (per task)
-Atomic task with XML structure:
-```xml
-<task type="auto">
-  <name>Create login endpoint</name>
-  <files>
-    - src/api/auth/login.ts
-    - tests/api/auth.test.ts
-  </files>
-  <action>
-## Context
-Brief context for this task.
-
-## Implementation Steps
-1. Create route handler
-2. Add validation
-3. Write tests
-  </action>
-  <verify>
-- [ ] Tests pass
-- [ ] TypeScript compiles
-- [ ] Manual test works
-  </verify>
-  <done>
-- Feature works as expected
-- Tests passing
-- Code reviewed
-  </done>
-</task>
-```
-
-## Sub-Agent Spawning
-
-GSD supports spawning specialized agents:
-
-| Agent | Purpose |
-|-------|---------|
-| **researcher** | Research domain, stack, patterns |
-| **planner** | Create atomic task plans |
-| **executor** | Execute plans with fresh context |
-| **verifier** | Verify code against requirements |
-
-Use `/gsd:plan-phase` and `/gsd:execute-phase` to trigger these agents.
 
 ## Why GSD?
 
@@ -154,16 +203,6 @@ GSD fixes this with:
 - Phase workflow → manageable chunks
 - Fresh executors → consistent quality
 - Verification step → tested deliverables
-
-## Comparison with Original GSD
-
-| Feature | Original GSD | Pi-GSD |
-|---------|--------------|--------|
-| Platform | Claude Code | pi-agent |
-| Commands | /new-project, etc. | /gsd:new-project, etc. |
-| Sub-agents | Claude sub-tasks | pi sub-agents |
-| Context files | .gsd/CLAUDE.md | .planning/STATE.md |
-| State persistence | CLAUDE.md + session | STATE.md + entries |
 
 ## Credits
 

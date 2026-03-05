@@ -22,11 +22,24 @@ export interface GsdState {
   description: string;
   createdAt: string;
   updatedAt: string;
+  projectVersion?: string;
+  milestone?: string | null;
   currentPhase: number;
   phaseStatus: GsdPhase["status"];
   phases: GsdPhase[];
   blockers: string[];
   nextActions: string[];
+  todos?: string[];
+  debugSessions?: DebugSession[];
+}
+
+export interface DebugSession {
+  id: string;
+  description: string;
+  hypotheses: string[];
+  tested: { hypothesis: string; result: string }[];
+  resolution: string | null;
+  created: string;
 }
 
 const PLANNING_DIR = ".planning";
@@ -214,6 +227,12 @@ function parseStateMd(content: string): GsdState {
         case "phase_status":
           state.phaseStatus = value as GsdPhase["status"];
           break;
+        case "version":
+          state.projectVersion = value;
+          break;
+        case "milestone":
+          state.milestone = value;
+          break;
       }
     }
     
@@ -264,6 +283,8 @@ function formatStateMd(state: GsdState): string {
     `description: ${state.description}`,
     `created: ${state.createdAt}`,
     `updated: ${state.updatedAt}`,
+    `version: ${state.projectVersion || "0.0.0"}`,
+    state.milestone ? `milestone: ${state.milestone}` : "# milestone: (none)",
     `current_phase: ${state.currentPhase}`,
     `phase_status: ${state.phaseStatus}`,
     "",
