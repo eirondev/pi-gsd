@@ -10,6 +10,7 @@ import * as path from "node:path";
 export interface GsdPhase {
   number: number;
   name: string;
+  description?: string;
   status: "pending" | "discussing" | "planning" | "executing" | "verifying" | "completed";
   contextMd?: string;
   researchMd?: string;

@@ -120,7 +120,7 @@ export function registerCompleteMilestoneCommand(pi: ExtensionAPI): void {
 						stdio: "pipe"
 					});
 					
-					ctx.ui.notify(`✅ Git tag created: ${tagName}`, "success");
+					ctx.ui.notify(`✅ Git tag created: ${tagName}`, "info");
 				} catch (error) {
 					ctx.ui.notify(`Failed to create git tag: ${error}`, "warning");
 				}
@@ -146,7 +146,7 @@ export function registerCompleteMilestoneCommand(pi: ExtensionAPI): void {
 				`Version: ${currentVersion} → ${newVersion}\n` +
 				`Archived to: archive/${newVersion}-${milestoneSlug}/\n\n` +
 				`Next: Run /gsd:new-milestone to start version ${newVersion}`,
-				"success"
+				"info"
 			);
 		},
 	});

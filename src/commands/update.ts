@@ -31,7 +31,7 @@ export function registerUpdateCommand(pi: ExtensionAPI): void {
 					"✅ pi-gsd updated!\n\n" +
 					"Run '/gsd:help' to see all available commands.\n" +
 					"Restart pi to load the new version.",
-					"success"
+					"info"
 				);
 			} catch (error: any) {
 				// If npm fails, suggest manual update

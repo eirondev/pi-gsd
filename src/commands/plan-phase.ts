@@ -231,7 +231,7 @@ async function manualPlanning(ctx: any, phase: any, phaseDir: string): Promise<v
 		`✅ Created ${phase.plans.length} plan(s) for Phase ${phase.number}\n\n` +
 		`Files: ${phase.plans.join(", ")}\n\n` +
 		`Next: Run /gsd:execute-phase ${phase.number} when ready`,
-		"success"
+		"info"
 	);
 }
 
@@ -253,6 +253,6 @@ async function loadExistingPlans(ctx: any, phase: any, phaseDir: string): Promis
 		`✅ Loaded ${planFiles.length} plan(s):\n` +
 		planFiles.map(p => `  - ${p}`).join("\n") +
 		`\n\nNext: Run /gsd:execute-phase ${phase.number} when ready`,
-		"success"
+		"info"
 	);
 }

@@ -71,7 +71,11 @@ export function registerResumeWorkCommand(pi: ExtensionAPI): void {
 			const statusMatch = handoff.match(/\*\*Status:\*\* (\w+)/);
 
 			const handoffPhase = phaseMatch ? parseInt(phaseMatch[1], 10) : state.currentPhase;
-			const handoffStatus = statusMatch ? statusMatch[1] : state.phaseStatus;
+			const validStatuses = ["pending", "discussing", "planning", "executing", "verifying", "completed"] as const;
+			type PhaseStatus = typeof validStatuses[number];
+			const handoffStatus: PhaseStatus = statusMatch && validStatuses.includes(statusMatch[1] as PhaseStatus)
+				? (statusMatch[1] as PhaseStatus)
+				: state.phaseStatus;
 
 			// Update state
 			if (handoffPhase !== state.currentPhase || handoffStatus !== state.phaseStatus) {
@@ -97,7 +101,7 @@ export function registerResumeWorkCommand(pi: ExtensionAPI): void {
 				`Phase: ${handoffPhase}\n` +
 				`Status: ${handoffStatus}\n\n` +
 				`Next: ${nextCommand}`,
-				"success"
+				"info"
 			);
 		},
 	});

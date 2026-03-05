@@ -145,8 +145,8 @@ export default function gsdExtension(pi: ExtensionAPI): void {
 		if (planningDir) {
 			const state = readState(planningDir);
 			if (state) {
-				pi.log("info", `GSD: Restored state for project "${state.projectName}"`);
-				pi.log("info", `GSD: Phase ${state.currentPhase} (${state.phaseStatus})`);
+				console.log(`[GSD] Restored state for project "${state.projectName}"`);
+				console.log(`[GSD] Phase ${state.currentPhase} (${state.phaseStatus})`);
 				
 				// Set status indicator
 				if (state.phaseStatus !== "pending" && state.phaseStatus !== "completed") {
@@ -155,12 +155,12 @@ export default function gsdExtension(pi: ExtensionAPI): void {
 				
 				// Show pending todos if any
 				if (state.todos && state.todos.length > 0) {
-					pi.log("info", `GSD: ${state.todos.length} pending todo(s)`);
+					console.log(`[GSD] ${state.todos.length} pending todo(s)`);
 				}
 				
 				// Show blockers if any
 				if (state.blockers && state.blockers.length > 0) {
-					pi.log("warn", `GSD: ${state.blockers.length} blocker(s) - ${state.blockers.join(", ")}`);
+					console.log(`[GSD] ${state.blockers.length} blocker(s) - ${state.blockers.join(", ")}`);
 				}
 			}
 		}

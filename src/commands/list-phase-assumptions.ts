@@ -109,7 +109,7 @@ export function registerListPhaseAssumptionsCommand(pi: ExtensionAPI): void {
 				const edited = await ctx.ui.editor("Edit assumptions:", existing);
 				if (edited) {
 					fs.writeFileSync(contextPath, edited, "utf-8");
-					ctx.ui.notify("Assumptions saved.", "success");
+					ctx.ui.notify("Assumptions saved.", "info");
 				}
 			}
 		},

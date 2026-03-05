@@ -125,7 +125,7 @@ _Delete this file after resuming._
 				`Status: ${state.phaseStatus}\n\n` +
 				`Handoff saved to: HANDOFF.md\n\n` +
 				`To resume: /gsd:resume-work`,
-				"success"
+				"info"
 			);
 		},
 	});

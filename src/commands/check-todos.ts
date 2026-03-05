@@ -28,7 +28,7 @@ export function registerCheckTodosCommand(pi: ExtensionAPI): void {
 			}
 
 			if (!state.todos || state.todos.length === 0) {
-				ctx.ui.notify("✅ No pending todos!", "success");
+				ctx.ui.notify("✅ No pending todos!", "info");
 				return;
 			}
 
@@ -77,7 +77,7 @@ export function registerCheckTodosCommand(pi: ExtensionAPI): void {
 
 				ctx.ui.notify(
 					`${action.includes("done") ? "✅ Completed" : "🗑️ Deleted"}: "${todo}"\n\nRemaining todos: ${state.todos.length}`,
-					"success"
+					"info"
 				);
 			} else if (action === "Clear all todos") {
 				const confirm = await ctx.ui.confirm(
@@ -88,7 +88,7 @@ export function registerCheckTodosCommand(pi: ExtensionAPI): void {
 				if (confirm) {
 					state.todos = [];
 					writeState(planningDir, state);
-					ctx.ui.notify("✅ All todos cleared.", "success");
+					ctx.ui.notify("✅ All todos cleared.", "info");
 				}
 			}
 		},

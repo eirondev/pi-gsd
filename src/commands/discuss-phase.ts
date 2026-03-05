@@ -105,7 +105,7 @@ export function registerDiscussPhaseCommand(pi: ExtensionAPI): void {
 				`✅ Context captured for Phase ${phaseNum}\n\n` +
 					`Saved to: ${contextPath}\n\n` +
 					`Next: Run /gsd:plan-phase ${phaseNum} to create task plans`,
-				"success"
+				"info"
 			);
 		},
 	});

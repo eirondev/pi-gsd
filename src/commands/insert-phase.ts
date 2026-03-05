@@ -148,7 +148,7 @@ export function registerInsertPhaseCommand(pi: ExtensionAPI): void {
 				`Phases ${insertAt}+ have been renumbered.\n` +
 				`Directory: ${newPhaseDir}\n\n` +
 				`Next: Run /gsd:discuss-phase ${insertAt}`,
-				"success"
+				"info"
 			);
 		},
 	});

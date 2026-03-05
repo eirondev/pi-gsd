@@ -26,11 +26,14 @@ export function registerHealthCommand(pi: ExtensionAPI): void {
 					const newPlanningDir = path.join(ctx.cwd, ".planning");
 					fs.mkdirSync(newPlanningDir, { recursive: true });
 
+					const now = new Date().toISOString();
 					const state = {
 						projectName: path.basename(ctx.cwd),
-						projectVersion: "0.0.0",
+						description: "",
+						createdAt: now,
+						updatedAt: now,
 						currentPhase: 0,
-						phaseStatus: "pending",
+						phaseStatus: "pending" as const,
 						phases: [],
 						blockers: [],
 						todos: [],
@@ -50,7 +53,7 @@ export function registerHealthCommand(pi: ExtensionAPI): void {
 
 					ctx.ui.notify(
 						"✅ Created .planning/ structure.\n\nRun /gsd:new-project to initialize the project.",
-						"success"
+						"info"
 					);
 					return;
 				}
@@ -73,11 +76,17 @@ export function registerHealthCommand(pi: ExtensionAPI): void {
 						message: `Missing ${file}`,
 						fix: () => {
 							if (file === "STATE.md") {
+								const now = new Date().toISOString();
 								writeState(planningDir, readState(planningDir) || {
 									projectName: "Unknown",
+									description: "",
+									createdAt: now,
+									updatedAt: now,
 									currentPhase: 0,
 									phaseStatus: "pending",
 									phases: [],
+									blockers: [],
+									nextActions: [],
 								});
 							} else if (file === "PROJECT.md") {
 								fs.writeFileSync(
@@ -107,13 +116,20 @@ export function registerHealthCommand(pi: ExtensionAPI): void {
 				issues.push({
 					severity: "error",
 					message: "STATE.md is corrupted or invalid",
-					fix: () => writeState(planningDir, {
-						projectName: path.basename(ctx.cwd),
-						currentPhase: 0,
-						phaseStatus: "pending",
-						phases: [],
-						nextActions: ["State reset - run /gsd:new-project"],
-					}),
+					fix: () => {
+						const now = new Date().toISOString();
+						writeState(planningDir, {
+							projectName: path.basename(ctx.cwd),
+							description: "",
+							createdAt: now,
+							updatedAt: now,
+							currentPhase: 0,
+							phaseStatus: "pending",
+							phases: [],
+							blockers: [],
+							nextActions: ["State reset - run /gsd:new-project"],
+						});
+					},
 				});
 			} else {
 				// Check phase consistency
@@ -156,7 +172,7 @@ export function registerHealthCommand(pi: ExtensionAPI): void {
 
 			// Display results
 			if (issues.length === 0) {
-				ctx.ui.notify("✅ All checks passed! Project is healthy.", "success");
+				ctx.ui.notify("✅ All checks passed! Project is healthy.", "info");
 				return;
 			}
 
@@ -179,7 +195,7 @@ export function registerHealthCommand(pi: ExtensionAPI): void {
 						issue.fix();
 					}
 				}
-				ctx.ui.notify("✅ Repaired all fixable issues.", "success");
+				ctx.ui.notify("✅ Repaired all fixable issues.", "info");
 			}
 		},
 	});

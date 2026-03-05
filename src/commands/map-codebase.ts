@@ -45,7 +45,7 @@ export function registerMapCodebaseCommand(pi: ExtensionAPI): void {
 				`- Architecture patterns documented\n` +
 				`- Conventions captured\n\n` +
 				`Next: Run /gsd:new-project to add new features to this codebase.`,
-				"success"
+				"info"
 			);
 		},
 	});

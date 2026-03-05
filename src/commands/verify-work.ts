@@ -87,7 +87,7 @@ export function registerVerifyWorkCommand(pi: ExtensionAPI): void {
 					`✅ Phase ${phaseNum} verified and complete!\n\n` +
 					`All checks passed. Phase marked as complete.\n\n` +
 					`Summary saved to: ${path.join(phaseDir, "SUMMARY.md")}`,
-					"success"
+					"info"
 				);
 			} else {
 				// Some checks failed

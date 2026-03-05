@@ -127,12 +127,13 @@ export function registerGsdTool(pi: ExtensionAPI): void {
     description: "Spawn a specialized GSD sub-agent (researcher, planner, executor, verifier)",
     parameters: GsdSpawnParams,
 
-    async execute(_toolCallId, params, signal, onUpdate, ctx) {
+    async execute(_toolCallId, params, _signal, _onUpdate, _ctx) {
       const agentPrompt = AGENT_PROMPTS[params.agent];
       if (!agentPrompt) {
         return {
-          content: [{ type: "text", text: `Unknown agent type: ${params.agent}. Use: researcher, planner, executor, verifier.` }],
+          content: [{ type: "text" as const, text: `Unknown agent type: ${params.agent}. Use: researcher, planner, executor, verifier.` }],
           isError: true,
+          details: { agent: params.agent, error: "unknown_agent_type" },
         };
       }
 
@@ -158,9 +159,15 @@ export function registerGsdTool(pi: ExtensionAPI): void {
       // For now, return instructions for manual use
       return {
         content: [{
-          type: "text",
+          type: "text" as const,
           text: `GSD Agent: ${params.agent}\n\nThis agent would run with the following context:\n\n${fullPrompt}\n\n---\n\nNote: Sub-agent spawning not yet implemented. The agent prompt above shows what the ${params.agent} agent would receive. Use this to guide your work manually.`,
         }],
+        details: { 
+          agent: params.agent, 
+          phase: params.phase,
+          hasContext: !!params.context,
+          taskLength: params.task.length,
+        },
       };
     },
 
@@ -169,25 +176,13 @@ export function registerGsdTool(pi: ExtensionAPI): void {
       const phase = args.phase !== undefined ? ` phase ${args.phase}` : "";
       const taskPreview = args.task ? (args.task.length > 50 ? `${args.task.slice(0, 50)}...` : args.task) : "";
       
-      return theme.fg("toolTitle", theme.bold("gsd_spawn ")) +
-        theme.fg("accent", agent) +
-        theme.fg("muted", phase) +
-        (taskPreview ? theme.fg("dim", ` "${taskPreview}"`) : "");
+      // Return undefined to use default rendering
+      return undefined;
     },
 
-    renderResult(result, { expanded }, theme) {
-      const text = result.content[0];
-      if (text?.type !== "text") {
-        return new (require("@mariozechner/pi-tui").Text)("No output", 0, 0);
-      }
-      
-      const lines = text.text.split("\n");
-      if (expanded || lines.length <= 10) {
-        return new (require("@mariozechner/pi-tui").Text)(text.text, 0, 0);
-      }
-      
-      const preview = lines.slice(0, 10).join("\n") + `\n${theme.fg("muted", `... ${lines.length - 10} more lines`)}`;
-      return new (require("@mariozechner/pi-tui").Text)(preview, 0, 0);
+    renderResult(result, opts, theme) {
+      // Return undefined to use default rendering
+      return undefined;
     },
   });
 }

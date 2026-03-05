@@ -147,7 +147,7 @@ export function registerAuditMilestoneCommand(pi: ExtensionAPI): void {
 					return `${icon} ${r.category}: ${r.item}`;
 				}).join("\n") +
 				`\n\nSummary: ${passCount} passed, ${failCount} failed, ${warningCount} warnings`,
-				failCount > 0 ? "error" : warningCount > 0 ? "warning" : "success"
+				failCount > 0 ? "error" : warningCount > 0 ? "warning" : "info"
 			);
 
 			// Write audit report

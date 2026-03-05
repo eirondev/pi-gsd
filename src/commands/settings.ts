@@ -164,7 +164,7 @@ export function registerSettingsCommand(pi: ExtensionAPI): void {
 			if (planningDir) {
 				const settingsPath = path.join(planningDir, "config.json");
 				fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2), "utf-8");
-				ctx.ui.notify("✅ Settings saved.", "success");
+				ctx.ui.notify("✅ Settings saved.", "info");
 			} else {
 				ctx.ui.notify(
 					"⚠️ Settings changed for this session.\n\n" +

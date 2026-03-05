@@ -81,7 +81,7 @@ export function registerSetProfileCommand(pi: ExtensionAPI): void {
 				`Planning: ${profile.planning}\n` +
 				`Execution: ${profile.execution}\n` +
 				`Verification: ${profile.verification}`,
-				"success"
+				"info"
 			);
 		},
 	});

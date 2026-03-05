@@ -165,7 +165,7 @@ ${session.resolution ? "" : "Run /gsd:debug again to continue investigating."}
 				session.resolution
 					? `✅ Debug Session Resolved\n\nIssue: ${description.trim()}\nSolution saved to: ${sessionId}.md`
 					: `🔍 Debug Session Saved\n\nSession: ${sessionId}\nHypotheses: ${session.hypotheses.length}\nTested: ${session.tested.length}\n\nContinue with /gsd:debug "${description.trim()}"`,
-				session.resolution ? "success" : "info"
+				session.resolution ? "info" : "info"
 			);
 		},
 	});

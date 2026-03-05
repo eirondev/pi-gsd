@@ -98,7 +98,7 @@ export function registerNewMilestoneCommand(pi: ExtensionAPI): void {
 				`1. Run /gsd:discuss-phase 1 to capture decisions\n` +
 				`2. Run /gsd:plan-phase 1 to create plans\n` +
 				`3. Run /gsd:execute-phase 1 to implement`,
-				"success"
+				"info"
 			);
 		},
 	});

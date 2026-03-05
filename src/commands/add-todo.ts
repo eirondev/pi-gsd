@@ -47,7 +47,7 @@ export function registerAddTodoCommand(pi: ExtensionAPI): void {
 				`"${todo.trim()}"\n\n` +
 				`Total todos: ${state.todos.length}\n` +
 				`View with: /gsd:check-todos`,
-				"success"
+				"info"
 			);
 		},
 	});

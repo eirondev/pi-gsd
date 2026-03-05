@@ -93,7 +93,7 @@ export function registerAddPhaseCommand(pi: ExtensionAPI): void {
 				`✅ Added Phase ${nextNumber}: ${phaseName.trim()}\n\n` +
 				`Directory: ${phaseDir}\n\n` +
 				`Next: Run /gsd:discuss-phase ${nextNumber} to capture decisions`,
-				"success"
+				"info"
 			);
 		},
 	});

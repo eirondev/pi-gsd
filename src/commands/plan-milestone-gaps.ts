@@ -44,7 +44,7 @@ export function registerPlanMilestoneGapsCommand(pi: ExtensionAPI): void {
 
 			// Parse gaps from audit
 			const failedItems: { category: string; item: string }[] = [];
-			const failMatches = audit.matchAll(/- ❌ \*\*([^*]+)\*\*: (.+)/g);
+			const failMatches = extractMatches(audit, /- ❌ \*\*([^*]+)\*\*: (.+)/g);
 			for (const match of failMatches) {
 				failedItems.push({ category: match[1], item: match[2] });
 			}
@@ -52,7 +52,7 @@ export function registerPlanMilestoneGapsCommand(pi: ExtensionAPI): void {
 			if (failedItems.length === 0) {
 				ctx.ui.notify(
 					"No gaps found in audit. All checks passed!",
-					"success"
+					"info"
 				);
 				return;
 			}
@@ -146,7 +146,7 @@ Identified during milestone audit.
 				ctx.ui.notify(
 					`✅ Added ${addedCount} phase(s) to close gaps.\n\n` +
 					`Next: Run /gsd:discuss-phase ${nextPhaseNum}`,
-					"success"
+					"info"
 				);
 			} else {
 				ctx.ui.notify("No phases created.", "info");
@@ -155,15 +155,13 @@ Identified during milestone audit.
 	});
 }
 
-// Helper for regex matchAll which may not exist in older environments
-if (!String.prototype.matchAll) {
-	String.prototype.matchAll = function(regex: RegExp) {
-		const matches: RegExpExecArray[] = [];
-		let match: RegExpExecArray | null;
-		const re = new RegExp(regex.source, regex.flags + 'g');
-		while ((match = re.exec(this)) !== null) {
-			matches.push(match);
-		}
-		return matches;
-	};
+// Helper to extract all matches from markdown
+function extractMatches(content: string, regex: RegExp): RegExpExecArray[] {
+	const matches: RegExpExecArray[] = [];
+	let match: RegExpExecArray | null;
+	const re = new RegExp(regex.source, regex.flags.includes('g') ? regex.flags : regex.flags + 'g');
+	while ((match = re.exec(content)) !== null) {
+		matches.push(match);
+	}
+	return matches;
 }

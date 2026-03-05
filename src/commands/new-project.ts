@@ -94,7 +94,7 @@ export function registerNewProjectCommand(pi: ExtensionAPI): void {
         `  - .planning/REQUIREMENTS.md\n` +
         `  - .planning/ROADMAP.md\n\n` +
         `Next: Run /gsd:discuss-phase 1 to start planning.`,
-        "success",
+        "info",
       );
     },
   });

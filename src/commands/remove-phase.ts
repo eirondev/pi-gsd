@@ -129,7 +129,7 @@ export function registerRemovePhaseCommand(pi: ExtensionAPI): void {
 				`Archived to: archive/removed-phases/\n` +
 				`Remaining phases: ${state.phases.length}\n\n` +
 				`Next: Continue with roadmap or run /gsd:add-phase`,
-				"success"
+				"info"
 			);
 		},
 	});

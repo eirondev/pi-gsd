@@ -28,12 +28,13 @@ export function registerQuickCommand(pi: ExtensionAPI): void {
 				.trim();
 
 			// Get task description if not provided
-			let description = taskDescription;
+			let description: string = taskDescription;
 			if (!description) {
-				description = await ctx.ui.editor(
+				const editorResult = await ctx.ui.editor(
 					"What do you want to do?",
 					""
 				);
+				description = editorResult || "";
 			}
 
 			if (!description?.trim()) {
@@ -159,7 +160,7 @@ ${fullMode ? "Full mode enabled: plan-checking and verification included." : "Qu
 				`   pi -p "Execute the task in ${taskDir}/PLAN.md"\n\n` +
 				`2. After completion, run:\n` +
 				`   /gsd:check-todos to mark complete`,
-				"success"
+				"info"
 			);
 		},
 	});
