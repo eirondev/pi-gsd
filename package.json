@@ -1,0 +1,51 @@
+{
+  "name": "@eirondev/pi-gsd",
+  "version": "0.1.0",
+  "description": "Get-Shit-Done for Pi-Agent - Spec-driven development with context engineering",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node --test"
+  },
+  "keywords": [
+    "pi-agent",
+    "gsd",
+    "get-shit-done",
+    "spec-driven",
+    "context-engineering",
+    "ai-coding",
+    "llm",
+    "development-workflow"
+  ],
+  "author": "Embedded Iron",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eirondev/pi-gsd.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eirondev/pi-gsd/issues"
+  },
+  "homepage": "https://github.com/eirondev/pi-gsd#readme",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": ">=0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
