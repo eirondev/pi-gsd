@@ -1,5 +1,8 @@
 # Pi-GSD: Get-Shit-Done for Pi-Agent
 
+> ⚠️ **UNTESTED - ALPHA RELEASE**  
+> This extension has been implemented but not fully tested end-to-end. Use with caution in production environments. Report issues to help us improve!
+
 Spec-driven development with context engineering, built as a pi-agent extension.
 
 **Based on:** [get-shit-done](https://github.com/gsd-build/get-shit-done) by TÂCHES
@@ -17,7 +20,7 @@ GSD provides:
 ## Installation
 
 ```bash
-# From npm
+# From npm (when published)
 pi install npm:@eirondev/pi-gsd
 
 # From GitHub
@@ -30,19 +33,21 @@ npm install && npm run build
 pi install ./path/to/pi-gsd
 ```
 
-## Commands
+## All Available Commands (27 Total)
 
-### Core Workflow
+### Core Workflow (7 commands)
 
 | Command | Description |
 |---------|-------------|
 | `/gsd:new-project` | Initialize: questions → research → requirements → roadmap |
-| `/gsd:discuss-phase <N>` | Capture implementation decisions |
+| `/gsd:discuss-phase <N>` | Capture implementation decisions in CONTEXT.md |
 | `/gsd:plan-phase <N>` | Research + create task plans |
-| `/gsd:execute-phase <N>` | Execute plans in parallel waves |
+| `/gsd:execute-phase <N>` | Execute plans in parallel waves with sub-agents |
 | `/gsd:verify-work <N>` | Manual verification checklist |
+| `/gsd:status` | Show project status |
+| `/gsd:progress` | Show workflow position |
 
-### Milestone Management
+### Milestone Management (4 commands)
 
 | Command | Description |
 |---------|-------------|
@@ -51,67 +56,55 @@ pi install ./path/to/pi-gsd
 | `/gsd:audit-milestone` | Verify milestone achieved DoD |
 | `/gsd:plan-milestone-gaps` | Create phases to close audit gaps |
 
-### Phase Management
+### Phase Management (4 commands)
 
 | Command | Description |
 |---------|-------------|
 | `/gsd:add-phase` | Append phase to roadmap |
 | `/gsd:insert-phase <N>` | Insert urgent work between phases |
-| `/gsd:remove-phase <N>` | Remove phase, renumber |
+| `/gsd:remove-phase <N>` | Remove phase, renumber roadmap |
 | `/gsd:list-phase-assumptions [N]` | Show planned approach |
 
-### Session Management
+### Session Management (2 commands)
 
 | Command | Description |
 |---------|-------------|
 | `/gsd:pause-work` | Create handoff for next session |
-| `/gsd:resume-work` | Restore from handoff |
+| `/gsd:resume-work` | Restore from handoff state |
 
-### Navigation
-
-| Command | Description |
-|---------|-------------|
-| `/gsd:status` | Show project status |
-| `/gsd:progress` | Show workflow position |
-
-### Brownfield Support
+### Brownfield (1 command)
 
 | Command | Description |
 |---------|-------------|
-| `/gsd:map-codebase` | Analyze existing codebase |
+| `/gsd:map-codebase` | Analyze existing codebase structure |
 
-### Utilities
+### Utilities (10 commands)
 
 | Command | Description |
 |---------|-------------|
 | `/gsd:quick [--full] [--discuss]` | Ad-hoc task with GSD guarantees |
-| `/gsd:debug [desc]` | Systematic debugging with state |
+| `/gsd:debug [desc]` | Systematic debugging with state tracking |
 | `/gsd:add-todo [desc]` | Capture idea for later |
 | `/gsd:check-todos` | List pending todos |
 | `/gsd:health [--repair]` | Validate .planning/ integrity |
 | `/gsd:settings` | Configure model profile & workflow |
 | `/gsd:set-profile <profile>` | Switch: quality/balanced/budget |
-
-### Help
-
-| Command | Description |
-|---------|-------------|
 | `/gsd:help` | Show all commands |
 | `/gsd:update` | Update pi-gsd |
-| `/gsd:join-discord` | Join community |
+| `/gsd:join-discord` | Join community Discord |
 
 ## Workflow
 
 ```
 /gsd:new-project
     ↓
-/gsd:discuss-phase 1    ← Capture decisions (CONTEXT.md)
+/gsd:discuss-phase 1 ← Capture decisions (CONTEXT.md)
     ↓
-/gsd:plan-phase 1       ← Research + create plans
+/gsd:plan-phase 1    ← Research + create plans
     ↓
-/gsd:execute-phase 1    ← Execute with sub-agents
+/gsd:execute-phase 1 ← Execute with sub-agents
     ↓
-/gsd:verify-work 1      ← Manual verification
+/gsd:verify-work 1   ← Manual verification
     ↓
 /gsd:complete-milestone ← Archive, tag, next
     ↓
@@ -120,15 +113,16 @@ pi install ./path/to/pi-gsd
 
 ## Quick Mode
 
-For ad-hoc tasks:
+For ad-hoc tasks without full GSD overhead:
 
-```
+```bash
+# Simple quick task
 /gsd:quick "Add dark mode toggle"
 
-# With full verification:
+# With full verification
 /gsd:quick --full "Fix login bug"
 
-# With context gathering:
+# With context gathering
 /gsd:quick --discuss "Add export feature"
 ```
 
@@ -146,11 +140,11 @@ your-project/
 │   ├── MILESTONE-AUDIT.md # Audit results
 │   ├── phases/
 │   │   ├── 01-setup/
-│   │   │   ├── CONTEXT.md
-│   │   │   ├── RESEARCH.md
-│   │   │   ├── 01-task.md
-│   │   │   ├── SUMMARY.md
-│   │   │   └── VERIFICATION.md
+│   │   │   ├── CONTEXT.md      # Implementation decisions
+│   │   │   ├── RESEARCH.md     # Background research
+│   │   │   ├── PLAN.md         # Task breakdown
+│   │   │   ├── SUMMARY.md      # Completion summary
+│   │   │   └── VERIFICATION.md # Checklist results
 │   │   └── 02-features/
 │   ├── quick/             # Ad-hoc tasks
 │   ├── debug/             # Debug sessions
@@ -166,10 +160,10 @@ your-project/
 | Profile | Planning | Execution | Verification | Use Case |
 |---------|----------|-----------|--------------|----------|
 | quality | Opus | Opus | Sonnet | Critical features |
-| balanced | Opus | Sonnet | Sonnet | Default |
+| balanced | Opus | Sonnet | Sonnet | Default (recommended) |
 | budget | Sonnet | Sonnet | Haiku | Quick iterations |
 
-### Workflow Settings
+### Workflow Settings (.planning/config.json)
 
 ```json
 {
@@ -193,16 +187,27 @@ your-project/
 ## Why GSD?
 
 Traditional AI coding suffers from:
-- Context buildup → degrading quality
-- No project memory → repeated mistakes
-- Large tasks → abandoned work
-- No verification → untested code
+- ❌ Context buildup → degrading quality
+- ❌ No project memory → repeated mistakes
+- ❌ Large tasks → abandoned work
+- ❌ No verification → untested code
 
 GSD fixes this with:
-- Structured files → persistent context
-- Phase workflow → manageable chunks
-- Fresh executors → consistent quality
-- Verification step → tested deliverables
+- ✅ Structured files → persistent context
+- ✅ Phase workflow → manageable chunks
+- ✅ Fresh executors → consistent quality
+- ✅ Verification step → tested deliverables
+
+## Development Status
+
+**Implemented:** All 27 commands ✅  
+**Testing:** In progress 🧪  
+**Status:** Alpha - use with caution ⚠️
+
+### Known Limitations
+- Sub-agent spawning tested but needs real-world validation
+- Some edge cases in phase management untested
+- Git integration not yet implemented
 
 ## Credits
 
